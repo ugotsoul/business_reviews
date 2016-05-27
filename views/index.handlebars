@@ -1,0 +1,34 @@
+<br><br>
+
+<div id="loading" class="hidden text-center">
+  <img src="img/spin.gif">
+</div>
+
+<form action="/add_new_business" method="POST" class="form-inline text-center" id="add-new-business-form">
+  <h4>Add Business Yelp URL</h4>
+  <div class="form-group">
+    <label for="yelp-url" class="sr-only">Yelp Business Url</label>
+      <input type="text" id="yelp-url" name='url' class="form-control" placeholder="www.yelp.com/biz/parada-22-san-francisco"></input>
+  </div>
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary" id="btn-submit">Submit</button>
+  </div>
+</form>
+
+{{#section 'jquery'}}
+<script>
+  $('document').ready(function(){
+    // On submitting the form, show loading spinner
+    $('#add-new-business-form').submit(function() {
+      $('#add-new-business-form').hide();
+      $('#loading').removeClass('hidden');
+    });
+
+    // On clicking a navigation link, show loading spinner
+    $("#home-link, #businesses-link").click(function() {
+      $('#add-new-business-form').hide();
+      $('#loading').removeClass('hidden');
+    });
+  });
+</script>
+{{/section}}

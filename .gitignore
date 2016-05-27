@@ -1,0 +1,7 @@
+.nvmrc
+node_modules
+lib/config.js
+.DS_Store
+.babelrc
+.eslintrc.json
+*log

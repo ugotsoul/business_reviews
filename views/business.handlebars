@@ -1,0 +1,18 @@
+<div class="page-header text-center">
+  <h1>Reviews for {{business.name}}</h1>
+  <p class="lead">
+    Overall Rating: {{business.overallRating}}<br>
+    Yelp URL: <a href='{{business.yelpUrl}}' target="_blank">{{business.yelpUrl}}</a>
+  </p>
+</div>
+
+{{#each reviews}}
+<dl class="dl-horizontal">
+  <dt>Author:</dt><dd>{{ author }}</dd>
+  <dt>Date Published:</dt><dd>{{ datePublished }}</dd>
+  <dt>Review Rating:</dt><dd> {{ reviewRating }}</dd>
+  <dt>Review:</dt><dd><p>{{{ reviewBody }}}</p></dd>
+</dl>
+<hr></hr>
+{{/each}}
+

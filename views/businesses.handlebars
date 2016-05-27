@@ -1,0 +1,23 @@
+<div id="loading" class="hidden text-center">
+  <br><br>
+  <img src="img/spin.gif">
+</div>
+
+<section id="business-list">
+  {{#each businesses}}
+    <a href="/business/{{id}}"><h3>{{ name }}</h1></a>
+    <br><br>
+  {{/each}}
+</section>
+
+{{#section 'jquery'}}
+<script>
+  $('document').ready(function(){
+    // On clicking a navigation link, show loading spinner
+    $("a").click(function() {
+      $('section#business-list').hide();
+      $('#loading').removeClass('hidden');
+    });
+  });
+</script>
+{{/section}}
