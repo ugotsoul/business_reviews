@@ -1,14 +1,10 @@
-<br><br>
-
-<div id="loading" class="hidden text-center">
-  <img src="img/spin.gif">
-</div>
+{{> spinner}}
 
 <form action="/add_new_business" method="POST" class="form-inline text-center" id="add-new-business-form">
   <h4>Add Business Yelp URL</h4>
-  <div class="form-group">
+  <div class="form-group" id="yelp-url-input">
     <label for="yelp-url" class="sr-only">Yelp Business Url</label>
-      <input type="text" id="yelp-url" name='url' class="form-control" placeholder="www.yelp.com/biz/parada-22-san-francisco"></input>
+      <input type="text" id="yelp-url-input" name='url' class="form-control" placeholder="www.yelp.com/biz/parada-22-san-francisco" autofocus="autofocus"></input>
   </div>
   <div class="form-group">
     <button type="submit" class="btn btn-primary" id="btn-submit">Submit</button>
@@ -16,19 +12,38 @@
 </form>
 
 {{#section 'jquery'}}
-<script>
-  $('document').ready(function(){
-    // On submitting the form, show loading spinner
-    $('#add-new-business-form').submit(function() {
-      $('#add-new-business-form').hide();
-      $('#loading').removeClass('hidden');
-    });
+  <script>
+    $('document').ready(function(){
+      var $addNewBusinessForm = $('#add-new-business-form');
+      var $loadingImage = $('#loading');
 
-    // On clicking a navigation link, show loading spinner
-    $("#home-link, #businesses-link").click(function() {
-      $('#add-new-business-form').hide();
-      $('#loading').removeClass('hidden');
+      $addNewBusinessForm.submit(function(evt) {
+        // Form validation
+        var urlParser = document.createElement('a');
+        urlParser.href = $('input#yelp-url-input').val();
+
+        if ($('input#yelp-url-input').val() === "") {
+          if ($('div#empty-url-alert').length === 0) {
+            $addNewBusinessForm.prepend("<div class='alert alert-warning' id='empty-url-alert'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><strong>No Url:</strong> Please enter a url.</div>");
+          }
+          evt.preventDefault();
+        } else if (urlParser.hostname !== 'www.yelp.com') {
+          if ($('div#invalid-url-alert').length === 0) {
+            $addNewBusinessForm.prepend("<div class='alert alert-warning' id='invalid-url-alert'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><strong>Invalid Url:</strong> Please enter a yelp business url.</div>");
+          }
+          evt.preventDefault();
+        } else {
+          // Submit the form, show loading spinner
+          $addNewBusinessForm.hide();
+          $loadingImage.removeClass('hidden');
+        }
+      });
+
+      // On navigation link click, show loading spinner
+      $("#home-link, #businesses-link").click(function() {
+        $addNewBusinessForm.hide();
+        $loadingImage.removeClass('hidden');
+      });
     });
-  });
-</script>
+  </script>
 {{/section}}

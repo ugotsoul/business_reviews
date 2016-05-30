@@ -6,33 +6,28 @@ const getBusinessAndReviewData = require('./lib/getBusinessAndReviewData');
 
 // ROUTES
 app.get('/', function(req, res) {
-  // res.cookie('form_state');
-  // TODO: create flash message cookie
   res.render('index');
 });
 
 app.post('/add_new_business', function(req, res) {
-  const parsedBusinessUrl = url.parse(req.body.url);
-  // Remove query parameters from URL
-  delete parsedBusinessUrl.query;
-  delete parsedBusinessUrl.search;
-  const formattedBusinessUrl = url.format(parsedBusinessUrl);
-
-  // Validate URL & Handle Errors
-  // TODO: Move form validation to index view file.
-  // TODO: Add flash messages after redirecting on error.
-  if (formattedBusinessUrl === '') res.redirect(303, '/');
-  if (parsedBusinessUrl.protocol !== 'http:') res.redirect(303, '/');
-  if (parsedBusinessUrl.hostname !== 'www.yelp.com') res.redirect(303, '/');
+  const formattedBusinessUrl = url.format(req.body.url);
 
   return getBusinessAndReviewData(formattedBusinessUrl)
     .then(function() {
-      // TODO: Success: render businesses page with flash message
+      req.session.flash = {
+        type: 'success',
+        intro: 'Success!',
+        message: 'Saved business reviews.'
+      }
       res.redirect(303, '/businesses');
     })
     .catch(function(err) {
       if (err) console.log(err);
-      // TODO: Failure: redirect to homepage with flash message
+      req.session.flash = {
+        type: 'danger',
+        intro: 'Oh no!',
+        message: 'Unable to save business reviews.'
+      }
       res.redirect(303, '/');
     });
 });
@@ -64,11 +59,17 @@ app.get('/business/:id', function(req, res) {
     });
 });
 
-// Error routes
-// TODO: Better error handling
-app.use(function(err, req, res) {
-  console.log(err.stack);
-  res.status(500).send('Internal Server Error');
+// Handle 404 Error
+app.use(function(req, res) {
+   res.status(404);
+   res.render('404');
+});
+
+// Handle 500 Error
+app.use(function(err, req, res, next) {
+  console.error(err.stack);
+  res.status(500);
+  res.render('500');
 });
 
 app.listen(app.get('port'), function() {
