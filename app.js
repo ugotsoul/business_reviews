@@ -41,7 +41,10 @@ app.get('/businesses', function(req, res) {
 
 app.get('/business/:id', function(req, res) {
   const reviewsPromise = modelFetcher.getReviewsForBusiness(req.params.id);
-  const businessPromise = modelFetcher.getBusiness(req.params.id);
+  const businessPromise = modelFetcher.getBusiness({
+    key: '_id',
+    value: req.params.id
+  });
 
   return Promise.all([reviewsPromise, businessPromise])
     .then(function(results) {
